@@ -342,7 +342,7 @@ public class ChestBank extends JavaPlugin {
                     return true;
                 }
                 Block block = player.getTargetBlock(trans, 4);
-                if (block.getType() != Material.CHEST && block.getType() != Material.ENDER_CHEST) {
+                if (block.getType() != Material.CHEST && block.getType() != Material.ENDER_CHEST && block.getType() != Material.TRAPPED_CHEST) {
                     player.sendMessage(ChatColor.RED + "You're not looking at a chest!");
                     player.sendMessage(ChatColor.GRAY + "(Found: " + block.getType() + ")");
                     return true;
@@ -737,16 +737,21 @@ public class ChestBank extends JavaPlugin {
             int blockX = block.getX();
             int blockY = block.getY();
             int blockZ = block.getZ();
-            if (block.getWorld().getBlockAt(blockX + 1, blockY, blockZ).getType().equals(Material.CHEST)) {
+			Block neighbourBlock = null;
+			neighbourBlock = block.getWorld().getBlockAt(blockX + 1, blockY, blockZ);
+            if ((neighbourBlock.getType().equals(Material.CHEST) || neighbourBlock.getType().equals(Material.TRAPPED_CHEST)) && (neighbourBlock.getType() == block.getType())) {
                 return block.getWorld().getBlockAt(blockX + 1, blockY, blockZ);
             }
-            if (block.getWorld().getBlockAt(blockX - 1, blockY, blockZ).getType().equals(Material.CHEST)) {
+			neighbourBlock = block.getWorld().getBlockAt(blockX - 1, blockY, blockZ);
+            if ((neighbourBlock.getType().equals(Material.CHEST) || neighbourBlock.getType().equals(Material.TRAPPED_CHEST)) && (neighbourBlock.getType() == block.getType())) {
                 return block.getWorld().getBlockAt(blockX - 1, blockY, blockZ);
             }
-            if (block.getWorld().getBlockAt(blockX, blockY, blockZ + 1).getType().equals(Material.CHEST)) {
+			neighbourBlock = block.getWorld().getBlockAt(blockX, blockY, blockZ + 1);
+            if ((neighbourBlock.getType().equals(Material.CHEST) || neighbourBlock.getType().equals(Material.TRAPPED_CHEST)) && (neighbourBlock.getType() == block.getType())) {
                 return block.getWorld().getBlockAt(blockX, blockY, blockZ + 1);
             }
-            if (block.getWorld().getBlockAt(blockX, blockY, blockZ - 1).getType().equals(Material.CHEST)) {
+			neighbourBlock = block.getWorld().getBlockAt(blockX, blockY, blockZ - 1);
+            if ((neighbourBlock.getType().equals(Material.CHEST) || neighbourBlock.getType().equals(Material.TRAPPED_CHEST)) && (neighbourBlock.getType() == block.getType())) {
                 return block.getWorld().getBlockAt(blockX, blockY, blockZ - 1);
             }
             return null;
