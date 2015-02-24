@@ -37,7 +37,7 @@ public class ChestBankListener implements Listener {
         if (!event.isCancelled()) { 
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Block block = event.getClickedBlock();
-                if ((block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST)) && plugin.isNetworkBank(block)) {
+                if ((block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST) || block.getType().equals(Material.TRAPPED_CHEST)) && plugin.isNetworkBank(block)) {
                     Player player = event.getPlayer();
                     boolean allowed = true;
                     String network = plugin.getNetwork(block);
@@ -75,7 +75,7 @@ public class ChestBankListener implements Listener {
                         }
                     }
                     event.setCancelled(true);
-                } else if ((block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST)) && plugin.isBankBlock(block)) {
+                } else if ((block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST) || block.getType().equals(Material.TRAPPED_CHEST)) && plugin.isBankBlock(block)) {
                     Player player = event.getPlayer();
                     if (!player.hasPermission("chestbank.use")) {
                         player.sendMessage(ChatColor.RED + "You do not have permission to use ChestBanks!");
@@ -228,7 +228,7 @@ public class ChestBankListener implements Listener {
     @EventHandler (priority = EventPriority.NORMAL)
     public void onBlockBreak (BlockBreakEvent event) {
         Block block = event.getBlock();
-        if (block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST)) {
+        if (block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST) || block.getType().equals(Material.TRAPPED_CHEST)) {
             // Chest Broken
             if (plugin.isBankBlock(block)) {
                 event.getPlayer().sendMessage(ChatColor.RED + "This is a ChestBank and cannot be destroyed!");
@@ -240,7 +240,7 @@ public class ChestBankListener implements Listener {
     @EventHandler (priority = EventPriority.NORMAL)
     public void onBlockIgnite (BlockIgniteEvent event) {
         Block block = event.getBlock();
-        if (block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST)) {
+        if (block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST) || block.getType().equals(Material.TRAPPED_CHEST)) {
             // Chest Ignited
             if (plugin.isBankBlock(block)) {
                 if (event.getCause().equals(BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL)) {
@@ -254,7 +254,7 @@ public class ChestBankListener implements Listener {
     @EventHandler (priority = EventPriority.NORMAL)
     public void onBlockPlace (BlockPlaceEvent event) {
         Block block = event.getBlock();
-        if (block.getType().equals(Material.CHEST)) {
+        if (block.getType().equals(Material.CHEST) || block.getType().equals(Material.TRAPPED_CHEST)) {
             String blockWorld = block.getWorld().getName();
             int blockX = block.getX();
             int blockY = block.getY();
@@ -265,16 +265,24 @@ public class ChestBankListener implements Listener {
                 Block neighbourBlock = null;
                 if (plugin.isNetworkBank(block.getWorld().getBlockAt(blockX + 1, blockY, blockZ))) {
                     neighbourBlock = block.getWorld().getBlockAt(blockX + 1, blockY, blockZ);
-                    network = plugin.getNetwork(neighbourBlock);
+					if (block.getType() == neighbourBlock.getType()) {
+						network = plugin.getNetwork(neighbourBlock);
+					}
                 } else if (plugin.isNetworkBank(block.getWorld().getBlockAt(blockX - 1, blockY, blockZ))) {
                     neighbourBlock = block.getWorld().getBlockAt(blockX - 1, blockY, blockZ);
-                    network = plugin.getNetwork(neighbourBlock);
+					if (block.getType() == neighbourBlock.getType()) {
+						network = plugin.getNetwork(neighbourBlock);
+					}
                 } else if (plugin.isNetworkBank(block.getWorld().getBlockAt(blockX, blockY, blockZ + 1))) {
                     neighbourBlock = block.getWorld().getBlockAt(blockX, blockY, blockZ + 1);
-                    network = plugin.getNetwork(neighbourBlock);
+					if (block.getType() == neighbourBlock.getType()) {
+						network = plugin.getNetwork(neighbourBlock);
+					}
                 } else if (plugin.isNetworkBank(block.getWorld().getBlockAt(blockX, blockY, blockZ - 1))) {
                     neighbourBlock = block.getWorld().getBlockAt(blockX, blockY, blockZ - 1);
-                    network = plugin.getNetwork(neighbourBlock);
+					if (block.getType() == neighbourBlock.getType()) {
+						network = plugin.getNetwork(neighbourBlock);
+					}
                 }
                 if (neighbourBlock.getType().equals(Material.ENDER_CHEST)) {
                     return;
